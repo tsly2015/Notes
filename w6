@@ -1,0 +1,349 @@
+import time
+
+def time_execution(code):
+   start = time.clock()  # start the clock
+   result = eval(code)  # evaluate any string as if it is a Python command
+   run_time = time.clock() - start  # find difference in start and end time
+   return result, run_time  # return the result of the code and time taken
+
+def spin_loop(n):
+	i = 0
+	while i < n:
+		i = i + 1
+
+time_execution('spin_loop(1000)')[1]
+
+def add_to_index(index,keyword,url):
+   for entry in index:
+       if entry[0] == keyword:
+           entry[1].append(url)
+           return
+   index.append([keyword,[url]])
+
+def make_string(p):
+   s=""
+   for e in p:
+       s = s + e
+   return s
+
+def make_big_index(size):
+   index = []
+   letters = ['a','a','a','a','a','a','a','a']
+   while len(index) < size:
+       word = make_string(letters)
+       add_to_index(index, word, 'fake')
+       for i in range(len(letters) - 1, 0, -1):
+           if letters[i] < 'z':
+               letters[i] = chr(ord(letters[i])+ 1)
+               break
+        else:
+               letters[i] = 'a'
+   return index
+
+def test_hash_function(func, keys, size):
+   results = [0] * size  #this makes a list where all elements refer to same thing(0)
+   keys_used = []
+   for w in keys:
+       if w not in keys_used:
+           hv = func(w, size)
+           results[hv] += 1
+           keys_used.append(w)
+   return results
+
+def bad_hash_string (keyword, buckets):
+   return ord(keyword[0]) % buckets # output is the bucket based on the first letter of the keyword
+
+words = get_page('http://www.gutenberg.org/cache/epub/1661/pg1661.txt').split() # initialize all the words from the page 'Adventures of Sherlock Holmes'
+counts = test_hash_function(bad_hash_string, words, 12) # obtain the counts for the old string
+print counts
+
+def hash_string(keyword, buckets):
+	h = 0
+	for c in keyword:
+		h = (h + ord(c))%buckets
+	return h
+
+test_hash_function(hash_string, words, 12)
+[[<word>, [<url>, ...]], [<word>, [<url>, ...]], ...]
+
+def make_hashtable(nbuckets):
+	i = 0
+	table = []
+	while i < nbuckets:
+		table.append([])
+		i = i + 1
+	return table
+
+def make_hashtable(nbuckets):
+	table = []
+	for unused in range(0, nbuckets):
+		table.append([])
+	return table
+
+print make_hashtable(3)
+#[[], [], []]
+#[[]]*nbuckets does not work: references
+
+def hashtable_get_bucket(htable, key):
+	return htable[hash_string(key, len(htable))]
+
+def hashtable_add(htable, key, value):
+	hashtable_get_bucket(htable, key).append([key, value])
+
+def hashtable_lookup(htable, key):
+	bucket = hashtable_get_bucket(htable, key)
+	for entry in bucket:
+		if entry[0] == key:
+			return entry[1]
+	return None
+
+def hashtable_update(htable, key, value):
+	bucket = hashtable_get_bucket(htable, key)
+	for entry in bucket:
+		if entry[0] == key:
+			entry[1] = value
+			return htable
+	bucket.append([key, value])
+	return htable
+
+
+def hashtable_update(htable,key,value):
+def hashtable_add(htable,key,value):
+def hashtable_get_bucket(htable,keyword):
+def hash_string(keyword,buckets):
+def make_hashtable(nbuckets):
+
+def get_all_links(page): 
+    links = [] 
+    while True: 
+        url, endpos = get_next_target(page)
+        if url: 
+            links.append(url) page = page[endpos:] 
+        else: 
+            break 
+    return links
+
+def crawl_web(seed): 
+    tocrawl = [seed] 
+    crawled = [] 
+    index = {}
+    while tocrawl: 
+        page = tocrawl.pop()
+        if page not in crawled: 
+            content = get_page(page) 
+            add_page_to_index(index, page, content) 
+            union(tocrawl, get_all_links(content)) 
+            crawled.append(page) 
+    return index 
+
+def add_page_to_index(index, url, content): 
+    words = content.split() 
+    for word in words: 
+        add_to_index(index, word, url) 
+
+def add_to_index(index, keyword, url): 
+    if keyword in index:
+    	index[keyword].append(url)
+    else:
+    	index[keyword] = [url]
+
+def lookup(index, keyword): 
+	if keyword in index:
+		return index[keyword]
+    else:
+    	return None
+
+def sum_list(p):
+    sum = 0
+    for e in p:
+        sum = sum + e
+    return sum
+
+def has_duplicate_element(p):
+   res = []
+   for i in range(0, len(p)):
+       for j in range(0, len(p)):
+           if i != j and p[i] == p[j]:
+               return True
+   return False
+
+def mystery(p):
+   i = 0
+   while True:
+       if i >= len(p):
+           break
+       if p[i] % 2:
+           i = i + 2
+       else:
+           i = i + 1
+   return i
+
+#     <hexamester>, { <class>: { <property>: <value>, ... },
+#                                     ... },
+#      ... }
+
+def courses_offered(courses, hexamester):
+    res = []
+    for c in courses[hexamester]:
+        res.append(c)
+    return res
+
+def is_offered(courses, course, hexamester):
+	return course in courses[hexamester]
+
+def when_offered(courses, course):
+	offered = []
+	for hexamester in courses:
+		if course in courses[hexamester]:
+			offered.append(hexamester)
+	return offered
+
+def involved(courses, person):
+	output = {}
+	for hexamester in courses:
+		for course in courses[hexamester]:
+			for key in courses[hexamester][course]:
+				if courses[hexamester][course][key] == person:
+					if hexamester in output:
+						output[hexamester].append(course)
+					else:
+						output[hexamester] = [course]
+	return output
+
+def bucket_find(bucket, key):
+	for entry in bucket:
+		if entry[0] == key:
+			return entry
+	return None
+
+def hashtable_lookup(htable, key):
+	bucket = hashtable_get_bucket(htable, key)
+	entry = bucket_find(bucket, key)
+	if entry:
+		return entry[1]
+	else:
+		return None
+
+def hashtable_update(htable, key, value):
+	bucket = hashtable_get_bucket(htable, key)
+	entry = bucket_find(bucket, key)
+	if entry:
+		entry[1] = value
+	else:
+		bucket.append([key, value])
+
+cache = {}
+
+def cached_execution(cache, proc, proc_input):
+	if proc_input not in cache:
+		cache[proc_input] = proc(proc_input)
+	return cache[proc_input]
+
+def factorial(n):
+    print "Running factorial"
+    result = 1
+    for i in range(2, n + 1):
+        result = result * i
+    return result
+
+print cached_execution(cache, factorial, 50)
+
+def cached_fibo(n):
+    if n == 1 or n == 0:
+        return n
+    else:
+        return (cached_execution(cache, cached_fibo, n - 1 )
+               + cached_execution(cache,  cached_fibo, n - 2 ))
+
+print cached_execution(cache, cached_fibo,100)
+
+def factorial(n):
+	if n == 0:
+		return 1
+	else:
+		return n * factorial(n-1)
+
+def is_palindrome(s):
+	if s == '':
+		return True
+	else:
+		if s[0] == s[-1]:
+			return is_palindrome(s[1:-1])
+		else:
+			return False
+
+def iter_palindrome(s):
+	for i in range(0, len(s)/2):
+		if s[i] != s[-(i + 1)]:
+			return False
+	return True
+
+def fibonacci(n):
+	if n == 0:
+		return 0
+	if n == 1:
+		return 1
+	return fibonacci(n-1) + fibonacci(n-2)
+
+def fibonacci(n):
+	current =0
+	after = 1
+	for i in range(0, n):
+		current, after = after, current + after
+	return current
+
+#Base case: popularity(0, p) = 1 Recursive step: popularity(t, p) = sigma over f E friends(p) popularity(t-1, p)for t > 0.
+def popularity(t,p):
+    if t == 0:  # base case, at time step 0
+        return 1 # the score is always 1 
+    else:
+        score = 0
+        for f in friends(p): # summing over the friends
+            score = score + popularity(t-1,f) # adding the popularity at the time step before
+        return score
+
+def crawl_web(seed): # returns index, graph of inlinks
+    tocrawl = [seed]
+    crawled = []
+    graph = {}  # <url>, [list of pages it links to]
+    index = {} 
+    while tocrawl: 
+        page = tocrawl.pop()
+        if page not in crawled:
+            content = get_page(page)
+            add_page_to_index(index, page, content)
+            outlinks = get_all_links(content)
+
+            graph[page] = outlinks
+            union(tocrawl, outlinks)
+            crawled.append(page)
+    return index, graph
+
+rank(0, url) = 1/npages
+rank(t, url) = (1-d)/npages +
+  sum([for each page 'p' that links to URL,
+    d*rank(t-1, p)/(number of outlinks from p)])
+
+def compute_ranks(graph):
+    d = 0.8 # damping factor
+    numloops = 10
+
+    ranks = {}
+    npages = len(graph)
+    for page in graph:
+        ranks[page] = 1.0 / npages
+
+    for i in range(0, numloops):
+        newranks = {}
+        for page in graph:
+            newrank = (1 - d) / npages
+
+			for node in graph:
+				if page in graph[node]:
+					newrank = newrank + d * ranks[node] / len(graph[node])
+
+            newranks[page] = newrank
+        ranks = newranks
+    return ranks
+
+
